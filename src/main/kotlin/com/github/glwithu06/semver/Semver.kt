@@ -1,19 +1,19 @@
-package main.java.com.github.glwithu06.semver
+package main.kotlin.com.github.glwithu06.semver
 
 import java.math.BigDecimal
 
-data class Semver(
+data class Semver internal constructor (
     val major: String,
     val minor: String = "0",
     val patch: String = "0",
-    val prereleaseIdentifiers: Array<String> = emptyArray(),
-    val buildMetadataIdentifiers: Array<String> = emptyArray()
+    val prereleaseIdentifiers: List<String> = emptyList(),
+    val buildMetadataIdentifiers: List<String> = emptyList()
 ) : Comparable<Semver> {
     constructor(major: Number,
                 minor: Number = 0,
                 patch: Number = 0,
-                prereleaseIdentifiers: Array<String> = emptyArray(),
-                buildMetadataIdentifiers: Array<String> = emptyArray())
+                prereleaseIdentifiers: List<String> = emptyList(),
+                buildMetadataIdentifiers: List<String> = emptyList())
             : this("$major", "$minor", "$patch", prereleaseIdentifiers, buildMetadataIdentifiers)
 
     enum class Style {
@@ -21,12 +21,12 @@ data class Semver(
     }
 
     fun toString(style: Style): String {
-        val version = arrayOf(major, minor, patch).joinToString(DOT_DELIMETER)
+        val version = arrayOf(major, minor, patch).joinToString(DOT_DELIMITER)
         val prerelease = prereleaseIdentifiers.let {
-            if (it.size > 0) PRERELEASE_DELIMETER + it.joinToString(DOT_DELIMETER) else ""
+            if (it.isNotEmpty()) PRERELEASE_DELIMITER + it.joinToString(DOT_DELIMITER) else ""
         }
         val buildMetadata = buildMetadataIdentifiers.let {
-            if (it.size > 0) BUILD_METADATA_DELIMETER + it.joinToString(DOT_DELIMETER) else ""
+            if (it.isNotEmpty()) BUILD_METADATA_DELIMITER + it.joinToString(DOT_DELIMITER) else ""
         }
         return when (style) {
             Style.SHORT -> version
@@ -48,6 +48,7 @@ data class Semver(
             return major.toBigDecimal() == other.major.toBigDecimal() &&
                     minor.toBigDecimal() == other.minor.toBigDecimal() &&
                     patch.toBigDecimal() == other.patch.toBigDecimal() &&
+                    prereleaseIdentifiers.count() == other.prereleaseIdentifiers.count() &&
                     prereleaseIdentifiers.zip(other.prereleaseIdentifiers)
                         .fold(true) { result, it ->
                             val itInDecimal = Pair(it.first.toBigDecimalOrNull(), it.second.toBigDecimalOrNull())
@@ -63,30 +64,38 @@ data class Semver(
 
     override fun compareTo(other: Semver): Int {
         fun Semver.versionsInDecimal(): List<BigDecimal> {
-            return arrayOf(major, minor, patch).map { it.toBigDecimal() }
+            return listOf(major, minor, patch).map { it.toBigDecimal() }
         }
 
         for (it in this.versionsInDecimal() zip other.versionsInDecimal()) {
-            if (it.first != it.second) return it.first.compareTo(it.second)
+            if (it.first != it.second) {
+                return it.first.compareTo(it.second)
+            }
         }
-        if (prereleaseIdentifiers.count() == 0) return if (other.prereleaseIdentifiers.count() == 0) 0 else 1
-        if (other.prereleaseIdentifiers.count() == 0) return -1
-        for (it in prereleaseIdentifiers zip other.prereleaseIdentifiers) {
+
+        if (prereleaseIdentifiers.count() == 0) {
+            return if (other.prereleaseIdentifiers.count() == 0) 0 else 1
+        }
+        if (other.prereleaseIdentifiers.count() == 0) {
+            return -1
+        }
+
+        loop@ for (it in prereleaseIdentifiers zip other.prereleaseIdentifiers) {
             val lhs = it.first.toBigDecimalOrNull()
             val rhs = it.second.toBigDecimalOrNull()
-            when {
-                lhs != null && rhs != null -> if (lhs != rhs) return lhs.compareTo(rhs)
-                lhs != null && rhs == null -> return -1
-                lhs == null && rhs != null -> return 1
-                else -> if (it.first != it.second) return it.first.compareTo(it.second)
+            return when {
+                lhs != null && rhs != null -> if (lhs != rhs) lhs.compareTo(rhs) else continue@loop
+                lhs != null && rhs == null -> -1
+                lhs == null && rhs != null -> 1
+                else -> if (it.first != it.second) it.first.compareTo(it.second) else continue@loop
             }
         }
         return prereleaseIdentifiers.count().compareTo(other.prereleaseIdentifiers.count())
     }
 
     companion object {
-        internal val DOT_DELIMETER = "."
-        internal val PRERELEASE_DELIMETER = "-"
-        internal val BUILD_METADATA_DELIMETER = "+"
+        internal const val DOT_DELIMITER = "."
+        internal const val PRERELEASE_DELIMITER = "-"
+        internal const val BUILD_METADATA_DELIMITER = "+"
     }
 }
