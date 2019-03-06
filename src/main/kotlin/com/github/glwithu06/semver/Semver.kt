@@ -52,7 +52,7 @@ data class Semver internal constructor (
                     prereleaseIdentifiers.zip(other.prereleaseIdentifiers)
                         .fold(true) { result, it ->
                             val itInDecimal = Pair(it.first.toBigDecimalOrNull(), it.second.toBigDecimalOrNull())
-                            return !result && when {
+                            return@fold result && when {
                                 itInDecimal.first != null && itInDecimal.second != null -> itInDecimal.first == itInDecimal.second
                                 itInDecimal.first == null && itInDecimal.second == null -> it.first == it.second
                                 else -> false

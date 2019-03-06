@@ -2,6 +2,7 @@ package main.kotlin.com.github.glwithu06.semver
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+import kotlin.math.max
 
 @ExperimentalContracts
 private fun require(condition: Boolean, message: String) {
@@ -11,6 +12,7 @@ private fun require(condition: Boolean, message: String) {
 
 private class SemverExt {
     companion object {
+        @UseExperimental(ExperimentalContracts::class)
         internal fun parse(input: String): Semver {
             val major: String
             val minor: String
@@ -30,24 +32,26 @@ private class SemverExt {
             var searchIndex = 0
             val majorMatchResult = "[0-9]+".toRegex().find(input, searchIndex)
             require(majorMatchResult != null, "No digits in $input")
-            require(input.substring(0..majorMatchResult.range.first) != "-", "Invalid version($input)")
+            require(input.substring(0..max(0, majorMatchResult.range.first - 1)) != "-", "Invalid version ($input)")
 
             major = majorMatchResult.value
-            searchIndex = majorMatchResult.range.last
+            searchIndex = majorMatchResult.range.last + 1
 
-            val versionNumericRegex = "$dotDelimiterInRegex[0-9]+".toRegex()
-            minor = versionNumericRegex.find(input, searchIndex)?.also { searchIndex = it.range.last }?.value?.substringAfter(Semver.DOT_DELIMITER) ?: "0"
-            patch = versionNumericRegex.find(input, searchIndex)?.also { searchIndex = it.range.last }?.value?.substringAfter(Semver.DOT_DELIMITER) ?: "0"
+            val versionNumericRegex = "^($dotDelimiterInRegex)[0-9]+".toRegex()
+            minor = versionNumericRegex.find(input.substring(searchIndex))?.also { searchIndex += it.range.last + 1 }?.value?.substringAfter(Semver.DOT_DELIMITER) ?: "0"
+            patch = versionNumericRegex.find(input.substring(searchIndex))?.also { searchIndex += it.range.last + 1 }?.value?.substringAfter(Semver.DOT_DELIMITER) ?: "0"
 
-            val prereleaseRegex = "(?<=$prereleaseDelimiterInRegex)([0-9A-Za-z-$dotDelimiterInRegex]+)".toRegex()
+            val prereleaseRegex = "(?<=$prereleaseDelimiterInRegex)([0-9A-Za-z|$prereleaseDelimiterInRegex|$dotDelimiterInRegex]+)".toRegex()
             prereleaseIdentifiers = prereleaseRegex.find(input, searchIndex)?.value?.let { it.split(Semver.DOT_DELIMITER) } ?: emptyList()
 
-            val buildMetadataRegex = "(?<=$buildMetadataDelimiterInRegex)([0-9A-Za-z-$dotDelimiterInRegex]+)".toRegex()
+            val buildMetadataRegex = "(?<=$buildMetadataDelimiterInRegex)([0-9A-Za-z|$prereleaseDelimiterInRegex|$dotDelimiterInRegex]+)".toRegex()
             buildMetadataIdentifiers = buildMetadataRegex.find(input, searchIndex)?.value?.let { it.split(Semver.DOT_DELIMITER) } ?: emptyList()
 
+            val prerelease = prereleaseIdentifiers.let { if (it.count() > 0) "${Semver.PRERELEASE_DELIMITER}" + it.joinToString(Semver.DOT_DELIMITER) else "" }
+            val metadata = buildMetadataIdentifiers.let { if (it.count() > 0) "${Semver.BUILD_METADATA_DELIMITER}" + it.joinToString(Semver.DOT_DELIMITER) else "" }
             val remainder= input.substring(searchIndex)
-                .replace("${Semver.PRERELEASE_DELIMITER}" + prereleaseIdentifiers.joinToString(Semver.DOT_DELIMITER), "")
-                .replace("${Semver.BUILD_METADATA_DELIMITER}" + buildMetadataIdentifiers.joinToString(Semver.DOT_DELIMITER), "")
+                .replace(prerelease, "")
+                .replace(metadata, "")
             if (remainder.count() > 0) {
                 throw IllegalArgumentException("Invalid version ($input)")
             }
