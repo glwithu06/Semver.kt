@@ -63,3 +63,27 @@ private class SemverExt {
 
 fun Semver(version: String): Semver = SemverExt.parse(version)
 fun Semver(version: Number): Semver = SemverExt.parse("$version")
+
+fun String.toVersion(): Semver {
+    return Semver(this)
+}
+
+fun String.toVersionOrNull(): Semver? {
+    return try {
+        Semver(this)
+    } catch (e: IllegalArgumentException) {
+        null
+    }
+}
+
+fun Number.toVersion(): Semver {
+    return Semver(this)
+}
+
+fun Number.toVersionOrNull(): Semver? {
+    return try {
+        Semver(this)
+    } catch (e: IllegalArgumentException) {
+        null
+    }
+}

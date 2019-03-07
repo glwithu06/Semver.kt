@@ -17,7 +17,7 @@ data class Semver internal constructor (
             : this("$major", "$minor", "$patch", prereleaseIdentifiers, buildMetadataIdentifiers)
 
     enum class Style {
-        SHORT, COMPARABLE, FULL
+        COMPACT, COMPARABLE, FULL
     }
 
     fun toString(style: Style): String {
@@ -29,7 +29,7 @@ data class Semver internal constructor (
             if (it.isNotEmpty()) BUILD_METADATA_DELIMITER + it.joinToString(DOT_DELIMITER) else ""
         }
         return when (style) {
-            Style.SHORT -> version
+            Style.COMPACT -> version
             Style.COMPARABLE -> version + prerelease
             Style.FULL -> version + prerelease + buildMetadata
         }

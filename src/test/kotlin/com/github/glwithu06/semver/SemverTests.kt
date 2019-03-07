@@ -80,7 +80,7 @@ class SemverTest {
     fun testVersionToString() {
         val version = Semver("1.101.345-rc.alpha.11+build.sha.111.extended")
 
-        assertEquals("1.101.345", version.toString(Semver.Style.SHORT))
+        assertEquals("1.101.345", version.toString(Semver.Style.COMPACT))
         assertEquals("1.101.345-rc.alpha.11", version.toString(Semver.Style.COMPARABLE))
         assertEquals("1.101.345-rc.alpha.11+build.sha.111.extended", version.toString(Semver.Style.FULL))
         assertEquals("1.101.345-rc.alpha.11+build.sha.111.extended", version.toString())

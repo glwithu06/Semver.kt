@@ -1,7 +1,8 @@
 package test.kotlin.com.github.glwithu06.semver
 
-import java.lang.IllegalArgumentException
 import main.kotlin.com.github.glwithu06.semver.Semver
+import main.kotlin.com.github.glwithu06.semver.toVersion
+import main.kotlin.com.github.glwithu06.semver.toVersionOrNull
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -202,6 +203,112 @@ class ParserTests {
             assertFailsWith<IllegalArgumentException> {
                 print(Semver(version).toString())
             }
+        }
+    }
+
+    @Test
+    fun testIntegerToVersion() {
+        val ver = 10.toVersion()
+
+        assertEquals(ver.major, "10")
+        assertEquals(ver.minor, "0")
+        assertEquals(ver.patch, "0")
+        assertEquals(ver.prereleaseIdentifiers, emptyList())
+        assertEquals(ver.buildMetadataIdentifiers, emptyList())
+    }
+
+    @Test
+    fun testIntegerToVersionOrNull() {
+        val ver = 10.toVersionOrNull()
+
+        assertEquals(ver?.major, "10")
+        assertEquals(ver?.minor, "0")
+        assertEquals(ver?.patch, "0")
+        assertEquals(ver?.prereleaseIdentifiers, emptyList())
+        assertEquals(ver?.buildMetadataIdentifiers, emptyList())
+    }
+
+    @Test
+    fun testInvalidIntegerToVersion() {
+        assertEquals((-10).toVersionOrNull(), null)
+        assertFailsWith<IllegalArgumentException> {
+            (-10).toVersion()
+        }
+    }
+
+    @Test
+    fun testFloatToVersion() {
+        val ver = 10.346593.toVersion()
+
+        assertEquals(ver.major, "10")
+        assertEquals(ver.minor, "346593")
+        assertEquals(ver.patch, "0")
+        assertEquals(ver.prereleaseIdentifiers, emptyList())
+        assertEquals(ver.buildMetadataIdentifiers, emptyList())
+    }
+
+    @Test
+    fun testFloatToVersionOrNull() {
+        val ver = 10.346593.toVersionOrNull()
+
+        assertEquals(ver?.major, "10")
+        assertEquals(ver?.minor, "346593")
+        assertEquals(ver?.patch, "0")
+        assertEquals(ver?.prereleaseIdentifiers, emptyList())
+        assertEquals(ver?.buildMetadataIdentifiers, emptyList())
+    }
+
+    @Test
+    fun testInvalidFloatToVersion() {
+        assertEquals((-10.346593).toVersionOrNull(), null)
+        assertFailsWith<IllegalArgumentException> {
+            (-10.346593).toVersion()
+        }
+    }
+
+    @Test
+    fun testStringToVersion() {
+        val ver = "69938113471411635120691317071569414.452.368-rc.alpha.11.log-test+sha.exp.5114f85.20190121".toVersion()
+
+        assertEquals(ver.major, "69938113471411635120691317071569414")
+        assertEquals(ver.minor, "452")
+        assertEquals(ver.patch, "368")
+        assertEquals(ver.prereleaseIdentifiers.count(), 4)
+        assertEquals(ver.prereleaseIdentifiers[0], "rc")
+        assertEquals(ver.prereleaseIdentifiers[1], "alpha")
+        assertEquals(ver.prereleaseIdentifiers[2], "11")
+        assertEquals(ver.prereleaseIdentifiers[3], "log-test")
+        assertEquals(ver.buildMetadataIdentifiers.count(), 4)
+        assertEquals(ver.buildMetadataIdentifiers[0], "sha")
+        assertEquals(ver.buildMetadataIdentifiers[1], "exp")
+        assertEquals(ver.buildMetadataIdentifiers[2], "5114f85")
+        assertEquals(ver.buildMetadataIdentifiers[3], "20190121")
+    }
+
+    @Test
+    fun testStringToVersionOrNull() {
+        val ver = "69938113471411635120691317071569414.452.368-rc.alpha.11.log-test+sha.exp.5114f85.20190121".toVersionOrNull()
+
+        assertEquals(ver?.major, "69938113471411635120691317071569414")
+        assertEquals(ver?.minor, "452")
+        assertEquals(ver?.patch, "368")
+        assertEquals(ver?.prereleaseIdentifiers?.count(), 4)
+        assertEquals(ver?.prereleaseIdentifiers?.get(0), "rc")
+        assertEquals(ver?.prereleaseIdentifiers?.get(1), "alpha")
+        assertEquals(ver?.prereleaseIdentifiers?.get(2), "11")
+        assertEquals(ver?.prereleaseIdentifiers?.get(3), "log-test")
+        assertEquals(ver?.buildMetadataIdentifiers?.count(), 4)
+        assertEquals(ver?.buildMetadataIdentifiers?.get(0), "sha")
+        assertEquals(ver?.buildMetadataIdentifiers?.get(1), "exp")
+        assertEquals(ver?.buildMetadataIdentifiers?.get(2), "5114f85")
+        assertEquals(ver?.buildMetadataIdentifiers?.get(3), "20190121")
+    }
+
+    @Test
+    fun testInvalidStringToVersion() {
+        assertEquals("0.a.0-pre+meta".toVersionOrNull(), null)
+        assertFailsWith<IllegalArgumentException> {
+            "0.a.0-pre+meta".toVersion()
         }
     }
 }
