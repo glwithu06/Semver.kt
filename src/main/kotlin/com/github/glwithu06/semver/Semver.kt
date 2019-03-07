@@ -2,6 +2,15 @@ package main.kotlin.com.github.glwithu06.semver
 
 import java.math.BigDecimal
 
+/**
+ * [Semver] represent a semantic version according to [the Semantic Versioning Specification](https://semver.org/spec/v2.0.0.html).
+ *
+ * @property major major in string.
+ * @property minor minor in string.
+ * @property patch patch in string.
+ * @property prereleaseIdentifiers dot separated list of pre-release identifiers.
+ * @property buildMetadataIdentifiers dot separated list of build metadata identifiers.
+ */
 data class Semver internal constructor (
     val major: String,
     val minor: String = "0",
@@ -9,6 +18,16 @@ data class Semver internal constructor (
     val prereleaseIdentifiers: List<String> = emptyList(),
     val buildMetadataIdentifiers: List<String> = emptyList()
 ) : Comparable<Semver> {
+
+    /**
+     * Primary constructor to create [Semver].
+     *
+     * @param major major in number.
+     * @param minor minor in number.
+     * @param patch patch in number.
+     * @param prereleaseIdentifiers dot separated list of pre-release identifiers.
+     * @param buildMetadataIdentifiers dot separated list of build metadata identifiers.
+     */
     constructor(major: Number,
                 minor: Number = 0,
                 patch: Number = 0,
@@ -16,10 +35,31 @@ data class Semver internal constructor (
                 buildMetadataIdentifiers: List<String> = emptyList())
             : this("$major", "$minor", "$patch", prereleaseIdentifiers, buildMetadataIdentifiers)
 
+    /**
+     * Specifies string representation style.
+     */
     enum class Style {
-        COMPACT, COMPARABLE, FULL
+        /**
+         * Specifies a compact style, *Major.Minor.Patch* only, such as “1.2.3”.
+         */
+        COMPACT,
+        /**
+         * Specifies a COMPARABLE style, *Major.Minor.Patch-PreReleaseIdentifiers*, such as “1.2.3-rc.1”.
+         */
+        COMPARABLE,
+        /**
+         * Specifies a FULL style, *Major.Minor.Patch-PreReleaseIdentifiers+BuildMetadataIdentifiers*, such as “1.2.3-rc.1+SHA.a0f21”.
+         */
+        FULL
     }
 
+    /**
+     * Returns a string representation of the [Semver].
+     *
+     * @param style Specifies string representation [Style].
+     *
+     * @return a string representation of the [Semver].
+     */
     fun toString(style: Style): String {
         val version = arrayOf(major, minor, patch).joinToString(DOT_DELIMITER)
         val prerelease = prereleaseIdentifiers.let {
@@ -93,7 +133,7 @@ data class Semver internal constructor (
         return prereleaseIdentifiers.count().compareTo(other.prereleaseIdentifiers.count())
     }
 
-    companion object {
+    internal companion object {
         internal const val DOT_DELIMITER = "."
         internal const val PRERELEASE_DELIMITER = "-"
         internal const val BUILD_METADATA_DELIMITER = "+"

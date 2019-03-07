@@ -1,11 +1,13 @@
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    val kotlinVersion = "1.3.20"
-    id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
+    id("org.jetbrains.kotlin.jvm") version "1.3.20"
+    id("org.jetbrains.dokka") version "0.9.17"
 }
 
-version = "1.0.0-rc.1"
+group = "com.github.glwithu06.semver"
+version = "1.0.0"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -16,6 +18,12 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.withType<DokkaTask> {
+    reportUndocumented = false
+    outputFormat = "html"
+    outputDirectory = "$buildDir/javadoc"
 }
 
 repositories {

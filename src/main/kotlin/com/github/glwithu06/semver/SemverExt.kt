@@ -11,7 +11,7 @@ private fun require(condition: Boolean, message: String) {
 }
 
 private class SemverExt {
-    companion object {
+    internal companion object {
         @UseExperimental(ExperimentalContracts::class)
         internal fun parse(input: String): Semver {
             val major: String
@@ -61,13 +61,37 @@ private class SemverExt {
     }
 }
 
+/**
+ * Parses the string as a [Semver] and returns the result.
+ * @throws IllegalArgumentException if the string is not a valid representation of a semantic version.
+ *
+ * @return parsed [Semver].
+ */
 fun Semver(version: String): Semver = SemverExt.parse(version)
+
+/**
+ * Parses the number as a [Semver] and returns the result.
+ * @throws IllegalArgumentException if the number is not a valid representation of a semantic version.
+ *
+ * @return parsed [Semver].
+ */
 fun Semver(version: Number): Semver = SemverExt.parse("$version")
 
+/**
+ * Parses the string as a [Semver] and returns the result.
+ * @throws IllegalArgumentException if the string is not a valid representation of a semantic version.
+ *
+ * @return parsed [Semver].
+ */
 fun String.toVersion(): Semver {
     return Semver(this)
 }
 
+/**
+ * Parses the string as a [Semver] and returns the result.
+ *
+ * @return parsed [Semver] or `null` if the string is not a valid representation of a semantic version.
+ */
 fun String.toVersionOrNull(): Semver? {
     return try {
         Semver(this)
@@ -76,10 +100,22 @@ fun String.toVersionOrNull(): Semver? {
     }
 }
 
+/**
+ * Parses the number as a [Semver] and returns the result.
+ * @throws IllegalArgumentException if the number is not a valid representation of a semantic version.
+ *
+ * @return parsed [Semver].
+ */
 fun Number.toVersion(): Semver {
     return Semver(this)
 }
 
+
+/**
+ * Parses the number as a [Semver] and returns the result.
+ *
+ * @return parsed [Semver] or `null` if the number is not a valid representation of a semantic version.
+ */
 fun Number.toVersionOrNull(): Semver? {
     return try {
         Semver(this)
