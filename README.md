@@ -2,6 +2,9 @@
   <a href="https://kotlinlang.org/" target="_blank">
     <img alt="Kotlin" src="https://img.shields.io/badge/kotlin-1.3.20-blue.svg">
   </a>
+  <a href="https://travis-ci.org/glwithu06/Semver.kt" target="_blank">
+    <img alt="Build Status" src="https://travis-ci.org/glwithu06/Semver.kt.svg?branch=master">
+  </a>
 </p>
 
 # Semantic Versioning
