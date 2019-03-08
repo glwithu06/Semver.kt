@@ -1,4 +1,4 @@
-package main.kotlin.com.github.glwithu06.semver
+package com.github.glwithu06.semver
 
 import java.math.BigDecimal
 
@@ -102,6 +102,7 @@ data class Semver internal constructor (
         return false
     }
 
+    @Suppress("ReturnCount")
     override fun compareTo(other: Semver): Int {
         fun Semver.versionsInDecimal(): List<BigDecimal> {
             return listOf(major, minor, patch).map { it.toBigDecimal() }

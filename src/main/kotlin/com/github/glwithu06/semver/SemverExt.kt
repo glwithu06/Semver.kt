@@ -1,4 +1,4 @@
-package main.kotlin.com.github.glwithu06.semver
+package com.github.glwithu06.semver
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -42,13 +42,13 @@ private class SemverExt {
             patch = versionNumericRegex.find(input.substring(searchIndex))?.also { searchIndex += it.range.last + 1 }?.value?.substringAfter(Semver.DOT_DELIMITER) ?: "0"
 
             val prereleaseRegex = "(?<=$prereleaseDelimiterInRegex)([0-9A-Za-z|$prereleaseDelimiterInRegex|$dotDelimiterInRegex]+)".toRegex()
-            prereleaseIdentifiers = prereleaseRegex.find(input, searchIndex)?.value?.let { it.split(Semver.DOT_DELIMITER) } ?: emptyList()
+            prereleaseIdentifiers = prereleaseRegex.find(input, searchIndex)?.value?.split(Semver.DOT_DELIMITER) ?: emptyList()
 
             val buildMetadataRegex = "(?<=$buildMetadataDelimiterInRegex)([0-9A-Za-z|$prereleaseDelimiterInRegex|$dotDelimiterInRegex]+)".toRegex()
-            buildMetadataIdentifiers = buildMetadataRegex.find(input, searchIndex)?.value?.let { it.split(Semver.DOT_DELIMITER) } ?: emptyList()
+            buildMetadataIdentifiers = buildMetadataRegex.find(input, searchIndex)?.value?.split(Semver.DOT_DELIMITER) ?: emptyList()
 
-            val prerelease = prereleaseIdentifiers.let { if (it.count() > 0) "${Semver.PRERELEASE_DELIMITER}" + it.joinToString(Semver.DOT_DELIMITER) else "" }
-            val metadata = buildMetadataIdentifiers.let { if (it.count() > 0) "${Semver.BUILD_METADATA_DELIMITER}" + it.joinToString(Semver.DOT_DELIMITER) else "" }
+            val prerelease = prereleaseIdentifiers.let { if (it.count() > 0) Semver.PRERELEASE_DELIMITER + it.joinToString(Semver.DOT_DELIMITER) else "" }
+            val metadata = buildMetadataIdentifiers.let { if (it.count() > 0) Semver.BUILD_METADATA_DELIMITER + it.joinToString(Semver.DOT_DELIMITER) else "" }
             val remainder= input.substring(searchIndex)
                 .replace(prerelease, "")
                 .replace(metadata, "")
@@ -67,6 +67,7 @@ private class SemverExt {
  *
  * @return parsed [Semver].
  */
+@Suppress("FunctionNaming")
 fun Semver(version: String): Semver = SemverExt.parse(version)
 
 /**
@@ -75,6 +76,7 @@ fun Semver(version: String): Semver = SemverExt.parse(version)
  *
  * @return parsed [Semver].
  */
+@Suppress("FunctionNaming")
 fun Semver(version: Number): Semver = SemverExt.parse("$version")
 
 /**

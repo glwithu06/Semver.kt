@@ -1,8 +1,5 @@
-package test.kotlin.com.github.glwithu06.semver
+package com.github.glwithu06.semver
 
-import main.kotlin.com.github.glwithu06.semver.Semver
-import main.kotlin.com.github.glwithu06.semver.toVersion
-import main.kotlin.com.github.glwithu06.semver.toVersionOrNull
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

@@ -1,6 +1,5 @@
-package test.kotlin.com.glwithu06.semver
+package com.github.glwithu06.semver
 
-import main.kotlin.com.github.glwithu06.semver.Semver
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
