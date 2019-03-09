@@ -2,9 +2,35 @@ package com.github.glwithu06.semver
 
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 
 class SemverTest {
+
+    @Test
+    fun testSemverConstructor() {
+        val ver = Semver(1, 452, 368,
+                listOf("rc", "alpha", "11", "log-test"), listOf("sha", "exp", "5114f85", "20190121"))
+
+        assertEquals(ver.major, "1")
+        assertEquals(ver.minor, "452")
+        assertEquals(ver.patch, "368")
+        assertEquals(ver.prereleaseIdentifiers.count(), 4)
+        assertEquals(ver.prereleaseIdentifiers[0], "rc")
+        assertEquals(ver.prereleaseIdentifiers[1], "alpha")
+        assertEquals(ver.prereleaseIdentifiers[2], "11")
+        assertEquals(ver.prereleaseIdentifiers[3], "log-test")
+        assertEquals(ver.buildMetadataIdentifiers.count(), 4)
+        assertEquals(ver.buildMetadataIdentifiers[0], "sha")
+        assertEquals(ver.buildMetadataIdentifiers[1], "exp")
+        assertEquals(ver.buildMetadataIdentifiers[2], "5114f85")
+        assertEquals(ver.buildMetadataIdentifiers[3], "20190121")
+    }
+
+    @Test
+    fun testEqualOtherObjects() {
+        assertFalse(Semver("1.100.3").equals("1.101.3"))
+    }
 
     @Test
     fun testEqualBasicVersion() {
@@ -57,6 +83,8 @@ class SemverTest {
     @Test
     fun testCompareBasicAndPrereleaseVersion() {
         assert(Semver("1.99.231-alpha") < Semver("1.99.231"))
+        // lhs <-> rhs
+        assert(Semver("1.99.231") > Semver("1.99.231-alpha"))
     }
 
     @Test
