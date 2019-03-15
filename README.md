@@ -27,7 +27,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'com.github.glwithu06.semver:semver:x.y.z'
+    implementation 'com.github.glwithu06.semver:semver:x.y.z'
 }
 ```
 
@@ -38,7 +38,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
-    compile 'com.github.glwithu06.semver:semver:x.y.z'
+    implementation 'com.github.glwithu06:Semver.kt:x.y.z'
 }
 ```
 
