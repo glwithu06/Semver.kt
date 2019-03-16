@@ -38,7 +38,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
-    implementation 'com.github.glwithu06:Semver.kt:x.y.z'
+    implementation 'com.github.glwithu06:semver.kt:x.y.z'
 }
 ```
 
