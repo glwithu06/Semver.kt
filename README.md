@@ -13,12 +13,11 @@
 # Semantic Versioning
 
 Semantic Versioning implementation in Kotlin.
-`Semver` represent a semantic version according to the [Semantic Versioning Specification](http://semver.org/spec/v2.0.0.html).
+`Semver` represents the versioning system specified in [Semantic Versioning Specification](http://semver.org/spec/v2.0.0.html).
 
 ## Installation
 
-`Semver` doesn't contain any external dependencies.
-These are currently support options:
+`Semver` requires no external dependencies. You can install the library via:
 
 ### Gradle
 ```gradle
@@ -46,25 +45,25 @@ dependencies {
 
 ### Create
 
-`Semver` can be instantiated directly:
+You can create a `Semver` instance like the following:
 
 ```Kotlin
 val version = Semver(major = 1, minor = 23, patch = 45, prereleaseIdentifiers = listOf("rc", "1"), buildMetadataIdentifiers = listOf("B001"))
 
 ```
-`minor`, `patch` are optional parameters default to "0".
+`minor`, `patch` are optional parameters and set to "0" by default.
 
-`prereleaseIdentifiers`, `buildMetadataIdentifiers` are optional parameters default to empty list.
+`prereleaseIdentifiers`, `buildMetadataIdentifiers` are optional parameters and set to empty lists by default.
 
 ### Parse
 
-You can create `Semver` from String.
+You can create `Semver` from String:
 
 ```Kotlin
 val version = Semver("1.23.45-rc.1+B001")
 
 ```
-or from Numeric.
+or from Numeric:
 
 ```Kotlin
 val version = Semver(1.23)
@@ -74,17 +73,15 @@ val version = Semver(1.23)
 val version = Semver(10)
 ```
 
-If the version is invalid, it throws a `IllegalArgumentException`.
+If the given argument has an invalid format, it throws a `IllegalArgumentException`.
 
 ### Compare
 
-`Semver` class implements `Comparable`, it also overrides `equals` method.
+`Semver` class implements `Comparable` interface and overrides `equals()`, so their instances can be compared using the default operators including `<` , `<=` , `>` ,`>=` ,`==` , `!=`.
 
-So `Semver`s can be compared using the default operators for comparsion(`<` , `<=` , `>` ,`>=` ,`==` , `!=`).
-
-This will comapre major, minor, patch and the prerelease identifiers according to the [Semantic Versioning Specification](http://semver.org/spec/v2.0.0.html).
+The comparison rules are specified in [Semantic Versioning Specification](http://semver.org/spec/v2.0.0.html).
 
 ## Contribution
-Any pull requests and bug reports are welcome!
+Pull requests and bug reports are welcomed!
 
 Feel free to make a pull request.
