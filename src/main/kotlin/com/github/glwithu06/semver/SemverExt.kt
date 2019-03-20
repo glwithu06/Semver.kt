@@ -31,7 +31,7 @@ private class SemverExt {
             var remainder = input
             major = "[0-9]+".toRegex().find(remainder)
                     ?.also {
-                        require(remainder.getOrNull(it.range.first - 1) != '-', Major cannot be negative .($input)")
+                        require(remainder.getOrNull(it.range.first - 1) != '-', "Major cannot be negative .($input)")
                         remainder = remainder.substring(it.range.last + 1)
                     }
                     ?.value
