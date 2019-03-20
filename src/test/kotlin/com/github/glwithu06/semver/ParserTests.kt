@@ -15,7 +15,7 @@ class ParserTests {
         assertEquals(ver.prereleaseIdentifiers, emptyList())
         assertEquals(ver.buildMetadataIdentifiers, emptyList())
     }
-    
+
     @Test
     fun testParsePrereleaseVersion() {
         val ver = Semver("1.452.368-rc.alpha.11.log-test")
@@ -43,6 +43,20 @@ class ParserTests {
         assertEquals(ver.buildMetadataIdentifiers[1], "exp")
         assertEquals(ver.buildMetadataIdentifiers[2], "5114f85")
         assertEquals(ver.buildMetadataIdentifiers[3], "20190121")
+
+        val ver2 = Semver("1.452.368+assignee.branch-name.sha.exp.5114f85.20190121")
+
+        assertEquals(ver2.major, "1")
+        assertEquals(ver2.minor, "452")
+        assertEquals(ver2.patch, "368")
+        assertEquals(ver2.prereleaseIdentifiers, emptyList())
+        assertEquals(ver2.buildMetadataIdentifiers.count(), 6)
+        assertEquals(ver2.buildMetadataIdentifiers[0], "assignee")
+        assertEquals(ver2.buildMetadataIdentifiers[1], "branch-name")
+        assertEquals(ver2.buildMetadataIdentifiers[2], "sha")
+        assertEquals(ver2.buildMetadataIdentifiers[3], "exp")
+        assertEquals(ver2.buildMetadataIdentifiers[4], "5114f85")
+        assertEquals(ver2.buildMetadataIdentifiers[5], "20190121")
     }
 
     @Test
