@@ -32,31 +32,18 @@ class ParserTests {
 
     @Test
     fun testParseBuildMetadataVersion() {
-        val ver = Semver("1.452.368+sha.exp.5114f85.20190121")
+        val ver = Semver("1.452.368+sha.exp.5114f85.20190121.hyphen-test")
 
         assertEquals(ver.major, "1")
         assertEquals(ver.minor, "452")
         assertEquals(ver.patch, "368")
         assertEquals(ver.prereleaseIdentifiers, emptyList())
-        assertEquals(ver.buildMetadataIdentifiers.count(), 4)
+        assertEquals(ver.buildMetadataIdentifiers.count(), 5)
         assertEquals(ver.buildMetadataIdentifiers[0], "sha")
         assertEquals(ver.buildMetadataIdentifiers[1], "exp")
         assertEquals(ver.buildMetadataIdentifiers[2], "5114f85")
         assertEquals(ver.buildMetadataIdentifiers[3], "20190121")
-
-        val ver2 = Semver("1.452.368+assignee.branch-name.sha.exp.5114f85.20190121")
-
-        assertEquals(ver2.major, "1")
-        assertEquals(ver2.minor, "452")
-        assertEquals(ver2.patch, "368")
-        assertEquals(ver2.prereleaseIdentifiers, emptyList())
-        assertEquals(ver2.buildMetadataIdentifiers.count(), 6)
-        assertEquals(ver2.buildMetadataIdentifiers[0], "assignee")
-        assertEquals(ver2.buildMetadataIdentifiers[1], "branch-name")
-        assertEquals(ver2.buildMetadataIdentifiers[2], "sha")
-        assertEquals(ver2.buildMetadataIdentifiers[3], "exp")
-        assertEquals(ver2.buildMetadataIdentifiers[4], "5114f85")
-        assertEquals(ver2.buildMetadataIdentifiers[5], "20190121")
+        assertEquals(ver.buildMetadataIdentifiers[4], "hyphen-test")
     }
 
     @Test
@@ -69,7 +56,7 @@ class ParserTests {
 
     @Test
     fun testParseFullVersion() {
-        val ver = Semver("69938113471411635120691317071569414.452.368-rc.alpha.11.log-test+sha.exp.5114f85.20190121")
+        val ver = Semver("69938113471411635120691317071569414.452.368-rc.alpha.11.log-test+sha.exp.5114f85.20190121.hyphen-test")
 
         assertEquals(ver.major, "69938113471411635120691317071569414")
         assertEquals(ver.minor, "452")
@@ -79,11 +66,12 @@ class ParserTests {
         assertEquals(ver.prereleaseIdentifiers[1], "alpha")
         assertEquals(ver.prereleaseIdentifiers[2], "11")
         assertEquals(ver.prereleaseIdentifiers[3], "log-test")
-        assertEquals(ver.buildMetadataIdentifiers.count(), 4)
+        assertEquals(ver.buildMetadataIdentifiers.count(), 5)
         assertEquals(ver.buildMetadataIdentifiers[0], "sha")
         assertEquals(ver.buildMetadataIdentifiers[1], "exp")
         assertEquals(ver.buildMetadataIdentifiers[2], "5114f85")
         assertEquals(ver.buildMetadataIdentifiers[3], "20190121")
+        assertEquals(ver.buildMetadataIdentifiers[4], "hyphen-test")
     }
 
     @Test
@@ -279,7 +267,7 @@ class ParserTests {
 
     @Test
     fun testStringToVersion() {
-        val ver = "69938113471411635120691317071569414.452.368-rc.alpha.11.log-test+sha.exp.5114f85.20190121".toVersion()
+        val ver = "69938113471411635120691317071569414.452.368-rc.alpha.11.log-test+sha.exp.5114f85.20190121.hyphen-test".toVersion()
 
         assertEquals(ver.major, "69938113471411635120691317071569414")
         assertEquals(ver.minor, "452")
@@ -289,16 +277,17 @@ class ParserTests {
         assertEquals(ver.prereleaseIdentifiers[1], "alpha")
         assertEquals(ver.prereleaseIdentifiers[2], "11")
         assertEquals(ver.prereleaseIdentifiers[3], "log-test")
-        assertEquals(ver.buildMetadataIdentifiers.count(), 4)
+        assertEquals(ver.buildMetadataIdentifiers.count(), 5)
         assertEquals(ver.buildMetadataIdentifiers[0], "sha")
         assertEquals(ver.buildMetadataIdentifiers[1], "exp")
         assertEquals(ver.buildMetadataIdentifiers[2], "5114f85")
         assertEquals(ver.buildMetadataIdentifiers[3], "20190121")
+        assertEquals(ver.buildMetadataIdentifiers[4], "hyphen-test")
     }
 
     @Test
     fun testStringToVersionOrNull() {
-        val ver = "69938113471411635120691317071569414.452.368-rc.alpha.11.log-test+sha.exp.5114f85.20190121".toVersionOrNull()
+        val ver = "69938113471411635120691317071569414.452.368-rc.alpha.11.log-test+sha.exp.5114f85.20190121.hyphen-test".toVersionOrNull()
 
         assertEquals(ver?.major, "69938113471411635120691317071569414")
         assertEquals(ver?.minor, "452")
@@ -308,11 +297,12 @@ class ParserTests {
         assertEquals(ver?.prereleaseIdentifiers?.get(1), "alpha")
         assertEquals(ver?.prereleaseIdentifiers?.get(2), "11")
         assertEquals(ver?.prereleaseIdentifiers?.get(3), "log-test")
-        assertEquals(ver?.buildMetadataIdentifiers?.count(), 4)
+        assertEquals(ver?.buildMetadataIdentifiers?.count(), 5)
         assertEquals(ver?.buildMetadataIdentifiers?.get(0), "sha")
         assertEquals(ver?.buildMetadataIdentifiers?.get(1), "exp")
         assertEquals(ver?.buildMetadataIdentifiers?.get(2), "5114f85")
         assertEquals(ver?.buildMetadataIdentifiers?.get(3), "20190121")
+        assertEquals(ver?.buildMetadataIdentifiers?.get(4), "hyphen-test")
     }
 
     @Test

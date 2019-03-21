@@ -50,14 +50,16 @@ class SemverTest {
     fun testEqualPrefixedVersion() {
         assertEquals(Semver("semver.1.100.3"), Semver("v1.100.3"))
         assertEquals(Semver("semver.1.100.3-rc.1"), Semver("ver1.100.3-rc.1"))
+        assertEquals(Semver("semver.1.100.3-rc.1"), Semver("semver.1.100.3-rc.1+build.123"))
     }
 
     @Test
     fun testEqualPrereleaseVersion() {
         assertEquals(Semver("1.100.3-rc.1"), Semver(major = "1", minor = "100", patch = "3", prereleaseIdentifiers = listOf("rc", "1")))
-        assertNotEquals(Semver("1.100.3-rc.1"), Semver("1.101.3-rc.2"))
-        assertNotEquals(Semver("1.100.3-alpha"), Semver("1.101.3-beta"))
-        assertNotEquals(Semver("1.100.3-rc.a"), Semver("1.101.3-rc.1"))
+        assertNotEquals(Semver("1.100.3-rc.1"), Semver("1.100.3-rc.2"))
+        assertNotEquals(Semver("1.100.3-rc.1"), Semver("1.100.3-rc.1.2.3"))
+        assertNotEquals(Semver("1.100.3-alpha"), Semver("1.100.3-beta"))
+        assertNotEquals(Semver("1.100.3-rc.a"), Semver("1.100.3-rc.1"))
     }
 
     @Test
@@ -78,6 +80,8 @@ class SemverTest {
         assert(Semver("1.99.231") < Semver("1.99.12344"))
         // Ignore build metadata
         assertEquals(Semver("1.99.231+b"), Semver("1.99.231+a"))
+        // the same version
+        assertFalse(Semver("1.99.231+a") < Semver("1.99.231+b"))
     }
 
     @Test
@@ -93,6 +97,9 @@ class SemverTest {
         assert(Semver("1.99.231-test.alpha") < Semver("1.99.231-test.beta"))
         assert(Semver("1.99.231-test.19b") < Semver("1.99.231-test.alpha"))
 
+        // numeric order
+        assert(Semver("1.99.231-test.1.2") < Semver("1.99.231-test.1.3"))
+
         // numeric < non-numeric
         assert(Semver("1.99.231-test.2") < Semver("1.99.231-test.19b"))
 
@@ -104,6 +111,16 @@ class SemverTest {
     }
 
     @Test
+    fun testBasicVersionToString() {
+        val version = Semver("1.101.345")
+
+        assertEquals("1.101.345", version.toString(Semver.Style.COMPACT))
+        assertEquals("1.101.345", version.toString(Semver.Style.COMPARABLE))
+        assertEquals("1.101.345", version.toString(Semver.Style.FULL))
+        assertEquals("1.101.345", version.toString())
+    }
+
+    @Test
     fun testVersionToString() {
         val version = Semver("1.101.345-rc.alpha.11+build.sha.111.extended")
 
@@ -111,5 +128,11 @@ class SemverTest {
         assertEquals("1.101.345-rc.alpha.11", version.toString(Semver.Style.COMPARABLE))
         assertEquals("1.101.345-rc.alpha.11+build.sha.111.extended", version.toString(Semver.Style.FULL))
         assertEquals("1.101.345-rc.alpha.11+build.sha.111.extended", version.toString())
+    }
+
+    @Test
+    fun testHash() {
+        assertEquals(Semver("1.100.3-rc.1.log-test+build.20190213.hyphen-test").hashCode(),
+                "1.100.3-rc.1.log-test+build.20190213.hyphen-test".hashCode())
     }
 }
